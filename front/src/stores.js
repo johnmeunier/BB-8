@@ -1,7 +1,7 @@
 import { writable } from "svelte/store";
 
 export const user = writable({
-  name: "",
-  surname: "",
-  color: ""
+  name: "John",
+  surname: "JN-2",
+  color: "red"
 });

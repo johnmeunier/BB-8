@@ -3,44 +3,48 @@
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
-  let user_value;
-  let power = 0;
-  let direction = 0;
+  import Drone from "../components/Drone.svelte";
+  import PiloteInfo from "../components/PiloteInfo.svelte";
+  
+  let user_value, droneState, socket;
 
   const unsubscribe = user.subscribe(value => {
     user_value = value;
   });
 
   const turnRight = () => {
-    direction += direction < 90 ? 10 : 0;
+    droneState.direction += droneState.direction < 90 ? 10 : 0;
   };
 
   const turnLeft = () => {
-    direction -= direction > -90 ? 10 : 0;
+    droneState.direction -= droneState.direction > -90 ? 10 : 0;
   };
 
   onMount(() => {
     if (user_value.name === "") {
       navigate("/login", { replace: true });
     } else {
-      const socket = io("http://localhost:3000");
-      socket.on("welcome", message => {
+      socket = io("http://localhost:3000");
+      socket.on("welcome", initDroneState => {
         socket.emit("newUser", user_value);
+        droneState = initDroneState;
       });
+      socket.on("newState", newDroneState => {
+        droneState = newDroneState;
+      })
     }
   });
+
+  $: if(socket != undefined) {
+    socket.emit("action", user_value, droneState);
+  }
+
 </script>
 
-<h2>Hello {user_value.surname}!</h2>
-<h3>
-  You're in the
-  <span style="color:{user_value.color};">{user_value.color} team</span>
-</h3>
+<PiloteInfo surname={user_value.surname} color={user_value.color}/>
+{#if droneState}
 <div class="cockpit">
-  <div
-    class="drone"
-    style="transform: translateY(-{power / 1.3}px) perspective(130px) rotateX({(power / 100) * 60}deg)
-    rotateY({direction / 1.3}deg)" />
+  <Drone power={droneState.power} direction={droneState.direction}/>
   <div class="cockpit__control">
     <button class="cockpit__left btn" on:click={turnLeft}>{'<'}</button>
     <div class="cockpit__speed">
@@ -51,10 +55,11 @@
         orient="vertical"
         min="0"
         max="100"
-        bind:value={power} />
-      <h4 class="cockpit__speed-value">{power}</h4>
-      <h4 class="cockpit__direction-value">{direction}</h4>
+        bind:value={droneState.power} />
+      <h4 class="cockpit__speed-value">{droneState.power}</h4>
+      <h4 class="cockpit__direction-value">{droneState.direction}</h4>
     </div>
     <button class="cockpit__right btn" on:click={turnRight}>></button>
   </div>
 </div>
+{/if}
