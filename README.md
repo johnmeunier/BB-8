@@ -177,8 +177,13 @@ Le Dashboard doit permettre plusieurs choses :
 - Effectuer une rotation dans le sens horaire
 - Effectuer une rotation dans le sens trigonométrique
 
+L'affichage principal comprend un composant affichant une image de BB-8 qui sera transformé en CSS pour schématiser l'état dans lequel il se trouve. Il comprend également la valeur numérique de sa vitesse et de sa rotation.
 
 ![Dashboard power left](Dashboard-power-left.png)
+
+Comme vous pouvez le voir sur ce screenshot, l'image de BB-8 se trouve transformé pour schématiser son état. Ici on imagine qu'il se déplace vers la gauche à environ 1/4 de sa vitesse.
+
+Pour faire ça, on va rajouter du style dynamique directement via l'HTML. Ce style va jouer sur la propriété `transform`. Nous jouerons plus précisemment avec les valeurs de `rotateX` et de `rotateY` qui permettront, via de simple transformations 2D, de donner un début d'effet 3D. Il vous faudra également jouer avec la valeur de `translateX` pour ajuster le positionnement de l'image. Cet effet est uné ébauche de rendu réaliste, il est possible de faire bien mieux avec des effets 3D ou du SVG par exemple mais ce serait beaucoup plus long. N'hésitez pas à expérimenter après le dojo sur cette partie. 
 
 ## Back
 
