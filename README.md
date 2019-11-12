@@ -5,7 +5,12 @@
     - [Router](#router)
     - [Le store](#le-store)
     - [Login](#login)
+      - [Générer le nom du pilote](#générer-le-nom-du-pilote)
+      - [Générer l'équipe couleur du pilote](#générer-léquipe-couleur-du-pilote)
+      - [Rediriger vers le poste de pilotage](#rediriger-vers-le-poste-de-pilotage)
     - [Dashboard](#dashboard)
+      - [Information du pilote](#information-du-pilote)
+      - [Le cockpit](#le-cockpit)
   - [Back](#back)
     - [Node.JS](#nodejs)
     - [Socket.io](#socketio)
@@ -113,9 +118,65 @@ Les illustrations sont seulement là à titre d'exemple. L'objectif est de crée
 
 ![Login example](Login.png)
 
+La page de Login est le premier point d'entrée vers le poste de pilotage du droid. Elle doit faire deux choses : 
+- Créer le pseudo du pilote
+- Assigner une couleur au pilote
+
+Dans un premier temps, il faut créer le formulaire de login
+
+```html
+<h2>Who are you ?</h2>
+<input on:input={nameHandler} placeholder="Your name" class="btn size-full" />
+<button on:click={go} class="btn size-full">Go !</button>
+```
+
+Ce formulaire a deux actions. Dans un premier temps il met à jour le nom de l'utilisateur dans le store. pour ce faire, il suffit de suivre ce qu'on s'est dit précedemment pour la mise à jour d'une valeur du store, ici on cherche à mettre à jour l'attribut name de la clé user.
+
+Lorsque l'utilisateur valide le formulaire de connexion, plusieurs choses sont à faire, notamment mettre à jour le pseudo et la couleur du pilote dans le store et rediriger vers le poste de pilotage.
+
+#### Générer le nom du pilote
+
+Comme le nom de beaucoup de droid, le but ici est de générer un pseudo sous la forme [Lettre][Lettre]-[Nombre] où la première lettre correspond à la première lettre du nom de l'utilisateur saisi dans le champ, la deuxième lettre correspond à la dernière lettre du nom de l'utilisateur saisi dans le champs, et le nombre correspond au nombre de lettre compris entre la première lettre et la dernière lettre du nom de l'utilisateur saisi dans le champ. 
+
+Voici différents exemple : 
+- John => JN-2
+- Johnathan => JN-7
+- Jérôme => JE-4
+- Internationalization => IN-18
+
+Ce pseudo est a assigner à la clé `user` dans le store dans l'attribut `surname`.
+
+#### Générer l'équipe couleur du pilote
+
+Une couleur doit être assigné à chaque utilisateur aléatoirement, plusieurs utilisateurs peuvent avoir la même couleur. La couleur assigné doit être compatible avec le drone Sphero BB-8, par exemple : 
+- blue
+- green
+- red
+- pink 
+- yellow
+
+#### Rediriger vers le poste de pilotage
+
+Très simplement, après avoir mis à jour l'utilisateur dans le store, il faut rediriger vers le dashboard. Pour rappel, on utilise [svelte-routing](https://github.com/EmilTholin/svelte-routing).
+
 ### Dashboard
 
+#### Information du pilote
+
+![Dashboard info](Dashboard-info.png)
+
+Le dashboard doit d'abord être contenir un composant affichant les informations de l'utilisateur comme son pseudo et son équipe
+
+#### Le cockpit
+
 ![Dashboard default](Dashboard-default.png)
+
+Le Dashboard doit permettre plusieurs choses : 
+- Afficher l'état du drone
+- Augmenter ou réduire la vitesse
+- Effectuer une rotation dans le sens horaire
+- Effectuer une rotation dans le sens trigonométrique
+
 
 ![Dashboard power left](Dashboard-power-left.png)
 
