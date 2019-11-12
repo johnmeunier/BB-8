@@ -18,40 +18,40 @@
       - [Côté front](#côté-front)
   - [IOT](#iot)
 
-L'idée de ce dojo est de se plonger dans l'univers de Star Wars pour créer une web app mobile afin de controler un drone BB-8. Quel programme !
+L'idée de ce dojo est de se plonger dans l'univers de Star Wars pour créer une web app mobile afin de contrôler un drone BB-8. Quel programme !
 
 Le Dojo se découpe en 3 parties où nous utiliserons des technologies et des méthodes différentes et relativement récentes :
 
-- Front : Svelte, BEM, CSS avancée avec des transiosn et des effets
+- Front : Svelte, BEM, CSS avancée avec des transition et des effets
 - Back : Node.JS, Socket.IO
 - IOT : Cylon.js
 
-Si vous d'expérimenter d'autres technologie front ou back, aucun problème
+Beaucoup d'éléments mis en place permettent surtout d'expérimenter certaines spécificités des langages que nous allons utiliser et auraient pu être faits autrement dans le cas d'un vrai projet en production. Le principal dans ce dojo est de découvrir de nouvelles choses de façon ludiques.
 
 ## Front
 
-Rentrons dans le vif du sujet, la partie Front sera développée en Svelte en respectant la convention de nommage de classe BEM.
+Rentrons dans le vif du sujet, la partie Front sera développée en *Svelte* en respectant la convention de nommage de classe BEM.
 
-Pour rappel BEM est une convention de nommage de classe facilitant la découpe en composant nottament. Vous pouvez retrouvez des informations sur BEM dans [cette présentation](https://speakerdeck.com/johnmeunier/developer-improve-your-dom-structure-with-bem).
+Pour rappel BEM est une convention de nommage de classe facilitant la découpe en composant notamment. Vous pouvez retrouvez des informations sur BEM dans [cette présentation](https://speakerdeck.com/johnmeunier/developer-improve-your-dom-structure-with-bem).
 
-Dans un premier temps, il faut initialiser un nouveau projet Svelte, vous pouvez vous inspirer de la [doc officiel](https://svelte.dev/blog/the-easiest-way-to-get-started). Personnellement j'ai utilisé la méthode _1. Use the REPL_ qui est la plus facile à mettre en place malgré des problèmes possible de proxy.
+Dans un premier temps, il faut initialiser un nouveau projet Svelte, vous pouvez vous inspirer de la [doc officiel](https://svelte.dev/blog/the-easiest-way-to-get-started). Personnellement j'ai utilisé la méthode _1. Use the REPL_ qui est la plus facile à mettre en place si vous avez des riques de blocage via le proxy. L'idée est surtout de créer le projet le plus lite possible, avec seulement *Rollup* correctement configuré. Pour info, [Rollup](https://rollupjs.org/guide/en/) est un bundler Javascript simple et léger. Si vous souhaitez en savoir plus sur cet outil, vous pouvez lire [cet article](https://buzut.net/configurer-rollup-bundles-esm-cjs/) simple et concis (mention spéciale au premier commentaire).
 
 ### Router
 
 L'application sera composée de deux pages :
 
-- Login, cette page servira simplement à se connnecter
-- Dashboard, cette page affichera votre nom de droid, votre équipe et vous fournira surtout le cockpit pour controler votre drone.
+- **Login**, cette page servira simplement à se connnecter
+- **Dashboard**, cette page affichera votre nom de droid, votre équipe et vous fournira surtout le cockpit pour controler votre drone.
 
-Pour ce faire, il faut mettre en place un routeur. Svelte n'en contient pas par défaut. Je vous conseille le package `svelte-routing`.
+Pour ce faire, il faut mettre en place un routeur. *Svelte* n'en contient pas par défaut. Je vous conseille le package `svelte-routing`.
 
 Il vous suffit après d'importer les composants utiles :
 
 ```js
-import { Router, Link, Route } from "svelte-routing";
+import { Router, Route } from "svelte-routing";
 ```
 
-L'utilisation du router est très classique. Les `route` doivent être compris dans un composant `router` et il faut renseigner au moins deux éléments indispensables :
+L'utilisation du router est très classique. Les `route` doivent être comprises dans un composant `router` et il faut renseigner au moins deux éléments indispensables :
 
 - `path` : le chemin de votre route
 - `component` : le composant à charger quand le paramètre `path` matche.
@@ -67,13 +67,11 @@ Par exemple :
 </Router>
 ```
 
-Le paramètre `url` ne sert pas dans notre cas mais doit au moins être indiqué à une string vide.
+Le paramètre `url` ne sert pas dans notre cas mais doit au moins être indiqué à une string vide. Pour information, il est utile [en cas de SSR](https://github.com/EmilTholin/svelte-routing#router).
 
 ### Le store
 
-Nous allons utiliser un store pour stocker les données de l'utilisateur actuellement connecté.
-
-Il suffit de créer un fichier `src/stores.js`
+Nous allons utiliser un store pour stocker les données de l'utilisateur actuellement connecté. Pour cela, avec *Svelte*, il suffit de créer un fichier `src/stores.js`
 
 ```js
 import { writable } from "svelte/store";
@@ -85,7 +83,7 @@ export const user = writable({
 });
 ```
 
-Pour utiliser votre store il faut l'importer où vous souhaitez l'utiliser, par exemple dans notre `Login.svelte`
+Pour interagir avec votre store il faut l'importer où vous souhaitez l'utiliser, par exemple dans un `Login.svelte`.
 
 ```js
 import { user } from "../stores.js";
@@ -103,26 +101,26 @@ user.update(user => ({
 Et pour écouter une valeur : 
 
 ```js
-I const unsubscribe = user.subscribe(value => {
+const unsubscribe = user.subscribe(value => {
   user_value = value;
 }); 
 ```
 
-On aura ici un store qui contiendra à l'initialisation un user avec des informations par défaut.
+Nous avons ici un store qui contiendra à l'initialisation un user avec des informations par défaut.
 
-Maintenant que nous avons mis en place un router et un store, nous pouvons maintenant passer aux détails de chaque page.
+Maintenant que nous avons mis en place un router et un store, nous pouvons passer au développement de chaque page.
 
-Les illustrations sont seulement là à titre d'exemple. L'objectif est de créer une interface dans le thème de Star Wars, faîtes parler votre imagination.
+Les illustrations sont seulement présentes à titre d'exemple. L'objectif est de créer une interface dans le thème de Star Wars, faites parler votre imagination.
 
 ### Login
 
 ![Login example](Login.png)
 
 La page de Login est le premier point d'entrée vers le poste de pilotage du droid. Elle doit faire deux choses : 
-- Créer le pseudo du pilote
-- Assigner une couleur au pilote
+- créer le pseudo du pilote
+- assigner une couleur au pilote
 
-Dans un premier temps, il faut créer le formulaire de login
+Dans un premier temps, il faut créer le formulaire de login.
 
 ```html
 <h2>Who are you ?</h2>
@@ -130,15 +128,15 @@ Dans un premier temps, il faut créer le formulaire de login
 <button on:click={go} class="btn size-full">Go !</button>
 ```
 
-Ce formulaire a deux actions. Dans un premier temps il met à jour le nom de l'utilisateur dans le store. pour ce faire, il suffit de suivre ce qu'on s'est dit précedemment pour la mise à jour d'une valeur du store, ici on cherche à mettre à jour l'attribut name de la clé user.
+Ce formulaire a deux actions. Dans un premier temps il met à jour le nom de l'utilisateur dans le store à chaque fois que l'utilisateur tape dans le champ. Pour ce faire, il suffit de suivre ce qu'on s'est dit précédemment pour la mise à jour d'une valeur du store, ici on cherche à mettre à jour l'attribut name de la clé user.
 
 Lorsque l'utilisateur valide le formulaire de connexion, plusieurs choses sont à faire, notamment mettre à jour le pseudo et la couleur du pilote dans le store et rediriger vers le poste de pilotage.
 
 #### Générer le nom du pilote
 
-Comme le nom de beaucoup de droid, le but ici est de générer un pseudo sous la forme [Lettre][Lettre]-[Nombre] où la première lettre correspond à la première lettre du nom de l'utilisateur saisi dans le champ, la deuxième lettre correspond à la dernière lettre du nom de l'utilisateur saisi dans le champs, et le nombre correspond au nombre de lettre compris entre la première lettre et la dernière lettre du nom de l'utilisateur saisi dans le champ. 
+Comme le nom de beaucoup de droid, le but ici est de générer un pseudo sous la forme [Lettre][Lettre]-[Nombre]. On imagine la règle suivante : la première lettre correspond à la première lettre du nom de l'utilisateur saisi dans le champ, la deuxième lettre correspond à la dernière lettre du nom de l'utilisateur saisi dans le champ, et le nombre correspond au nombre de lettre comprise entre la première lettre et la dernière lettre du nom de l'utilisateur saisi dans le champ.
 
-Voici différents exemple : 
+Voici différents exemples : 
 - John => JN-2
 - Johnathan => JN-7
 - Jérôme => JE-4
@@ -148,7 +146,7 @@ Ce pseudo est a assigner à la clé `user` dans le store dans l'attribut `surnam
 
 #### Générer l'équipe couleur du pilote
 
-Une couleur doit être assigné à chaque utilisateur aléatoirement, plusieurs utilisateurs peuvent avoir la même couleur. La couleur assigné doit être compatible avec le drone Sphero BB-8, par exemple : 
+Une couleur en anglais doit être assignée à chaque utilisateur aléatoirement, plusieurs utilisateurs peuvent avoir la même couleur. La couleur assignée doit être compatible avec le drone Sphero BB-8, par exemple : 
 - blue
 - green
 - red
@@ -165,29 +163,29 @@ Très simplement, après avoir mis à jour l'utilisateur dans le store, il faut 
 
 ![Dashboard info](Dashboard-info.png)
 
-Le dashboard doit d'abord être contenir un composant affichant les informations de l'utilisateur comme son pseudo et son équipe
+Le dashboard doit d'abord contenir un composant affichant les informations de l'utilisateur comme son pseudo et son équipe.
 
 #### Le cockpit
 
 ![Dashboard default](Dashboard-default.png)
 
 Le Dashboard doit permettre plusieurs choses : 
-- Afficher l'état du drone
-- Augmenter ou réduire la vitesse
-- Effectuer une rotation dans le sens horaire
-- Effectuer une rotation dans le sens trigonométrique
+- afficher l'état du drone
+- augmenter ou réduire la vitesse
+- effectuer une rotation dans le sens horaire
+- effectuer une rotation dans le sens trigonométrique
 
-L'affichage principal comprend un composant affichant une image de BB-8 qui sera transformé en CSS pour schématiser l'état dans lequel il se trouve. Il comprend également la valeur numérique de sa vitesse et de sa rotation.
+L'affichage principal comprend un composant affichant une image de BB-8 qui sera transformée en CSS pour schématiser l'état dans lequel il se trouve. Il comprend également la valeur numérique de sa vitesse et de sa rotation.
 
 ![Dashboard power left](Dashboard-power-left.png)
 
-Comme vous pouvez le voir sur ce screenshot, l'image de BB-8 se trouve transformé pour schématiser son état. Ici on imagine qu'il se déplace vers la gauche à environ 1/4 de sa vitesse.
+Comme vous pouvez le voir sur ce screenshot, l'image de BB-8 se trouve transformée pour schématiser son état. Ici on imagine qu'il se déplace vers la gauche à environ 1/4 de sa vitesse.
 
-Pour faire ça, on va rajouter du style dynamique directement via l'HTML. Ce style va jouer sur la propriété `transform`. Nous jouerons plus précisemment avec les valeurs de `rotateX` et de `rotateY` qui permettront, via de simple transformations 2D, de donner un début d'effet 3D. Il vous faudra également jouer avec la valeur de `translateX` pour ajuster le positionnement de l'image. Cet effet est uné ébauche de rendu réaliste, il est possible de faire bien mieux avec des effets 3D ou du SVG par exemple mais ce serait beaucoup plus long. N'hésitez pas à expérimenter après le dojo sur cette partie. 
+Pour faire cela, on va ajouter du style dynamique directement via l'HTML. Ce style va jouer sur la propriété `transform`. Nous jouerons plus précisément avec les valeurs de `rotateX` et de `rotateY` qui permettront, via de simples transformations 2D, de donner un début d'effet 3D. Il vous faudra également jouer avec la valeur de `translateX` pour ajuster le positionnement de l'image. Cet effet est une ébauche de rendu réaliste, il est possible de faire bien mieux avec des effets 3D ou du SVG par exemple mais ce serait beaucoup plus long. N'hésitez pas à expérimenter après le dojo sur cette partie. 
 
 ## Back
 
-Le back va permettre de faire le lien entre le post de pilotage et le drone. L'idée est donc de pouvoir récupérer les commandes que vous envoyez dans l'application web (augmentation de la puissance, virage notamment), de les transformer en commande compréhensibles par le drone puis de lui envoyer.
+Le back va permettre de faire le lien entre le poste de pilotage et le drone. L'idée est donc de pouvoir récupérer les commandes que vous envoyez dans l'application web (augmentation de la puissance, virage notamment), de les transformer en commande compréhensibles par le drone puis de lui envoyer.
 
 Pour le moment on va se focaliser sur les liens entre l'interface et le serveur.
 
@@ -246,7 +244,7 @@ server.on("connection", socket => {
 
 Ici on indique que lorsque l'événement `connection` est détecté on émet un événement de type `welcome` en envoyant l'objet `droneState` à l'utilisateur connecté au serveur.
 
-En ayant simplement compris cette règle, on peut développer une grande partie de l'application.
+En ayant simplement compris cette méthode, vous pouvez développer une grande partie de l'application.
 
 Il est également possible d'envoyer un événement à tous les utilisateurs connectés :
 
@@ -264,7 +262,7 @@ On va déjà appeler le script de socket.io dans notre html via le fichier `publ
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 ```
 
-Il ne vous reste plus qu'à créer votre socket en se connectant au serveur précédemment lancé :
+Il ne nous reste plus qu'à créer votre socket en se connectant au serveur précédemment lancé :
 
 ```js
 socket = io("http://localhost:3000");
