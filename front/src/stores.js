@@ -5,3 +5,7 @@ export const user = writable({
   surname: "JN-2",
   color: "red"
 });
+
+export const droid = writable({
+  isHyperspace: false
+})
