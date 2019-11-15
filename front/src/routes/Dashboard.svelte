@@ -1,5 +1,5 @@
 <script>
-  import { user } from "../stores.js";
+  import { user, droid } from "../stores.js";
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
 
@@ -34,14 +34,22 @@
   $: if (socket != undefined) {
     socket.emit("action", $user, droneState);
   }
+
+  $: droid.update(() => ({
+    isHyperspace: droneState && droneState.power === 100
+  }));
 </script>
 
 <PiloteInfo surname={$user.surname} color={$user.color} />
 {#if droneState}
   <div class="cockpit">
+    <ul class="infos">
+      <li>Power: {droneState.power}%</li>
+      <li>Direction: {droneState.direction}°</li>
+    </ul>
     <Drone power={droneState.power} direction={droneState.direction} />
     <div class="cockpit__control">
-      <button class="cockpit__left btn" on:click={turnLeft}>{'<'}</button>
+      <button class="cockpit__left btn" on:click={turnLeft}>Left</button>
       <div class="cockpit__speed">
         <input
           value="0"
@@ -51,10 +59,8 @@
           min="0"
           max="100"
           bind:value={droneState.power} />
-        <h4 class="cockpit__speed-value">{droneState.power}</h4>
-        <h4 class="cockpit__direction-value">{droneState.direction}</h4>
       </div>
-      <button class="cockpit__right btn" on:click={turnRight}>></button>
+      <button class="cockpit__right btn" on:click={turnRight}>Right</button>
     </div>
   </div>
 {/if}
