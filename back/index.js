@@ -2,9 +2,9 @@ const io = require("socket.io");
 const server = io.listen(3000);
 
 let initDroneState = {
-  "direction": 0,
-  "power": 0,
-  "color": "black"
+  direction: 0,
+  power: 0,
+  color: "black"
 };
 let droneState = initDroneState;
 
@@ -13,12 +13,12 @@ server.on("connection", socket => {
   socket.emit("welcome", droneState);
 
   socket.on("newUser", user => {
-      console.log(`# ${user.name} from team ${user.color} is now connected #`);
-      socket.emit("initCockpit", droneState);
+    console.log(`# ${user.name} from team ${user.color} is now connected #`);
+    socket.emit("initCockpit", droneState);
   });
 
   socket.on("action", (user, newDroneState) => {
-    droneState = {...newDroneState, color: user.color};
+    droneState = { ...newDroneState, color: user.color };
     socket.broadcast.emit("newState", droneState);
   });
 

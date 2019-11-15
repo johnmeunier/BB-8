@@ -3,8 +3,6 @@
   import { navigate } from "svelte-routing";
   import { generateARandomColor, generateSurname } from "../services";
 
-  let name = "";
-
   const nameHandler = e => {
     user.update(user => ({
       ...user,
