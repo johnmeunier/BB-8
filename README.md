@@ -34,7 +34,7 @@ Rentrons dans le vif du sujet, la partie Front sera développée en *Svelte* en 
 
 Pour rappel BEM est une convention de nommage de classe facilitant la découpe en composant notamment. Vous pouvez retrouvez des informations sur BEM dans [cette présentation](https://speakerdeck.com/johnmeunier/developer-improve-your-dom-structure-with-bem).
 
-Dans un premier temps, il faut initialiser un nouveau projet Svelte, vous pouvez vous inspirer de la [doc officiel](https://svelte.dev/blog/the-easiest-way-to-get-started). Personnellement j'ai utilisé la méthode _1. Use the REPL_ qui est la plus facile à mettre en place si vous avez des riques de blocage via le proxy. L'idée est surtout de créer le projet le plus lite possible, avec seulement *Rollup* correctement configuré. Pour info, [Rollup](https://rollupjs.org/guide/en/) est un bundler Javascript simple et léger. Si vous souhaitez en savoir plus sur cet outil, vous pouvez lire [cet article](https://buzut.net/configurer-rollup-bundles-esm-cjs/) simple et concis (mention spéciale au premier commentaire).
+Dans un premier temps, il faut initialiser un nouveau projet Svelte, vous pouvez vous inspirer de la [doc officielle](https://svelte.dev/blog/the-easiest-way-to-get-started). Personnellement j'ai utilisé la méthode _1. Use the REPL_ qui est la plus facile à mettre en place si vous avez des riques de blocage via le proxy. L'idée est surtout de créer le projet le plus lite possible, avec seulement *Rollup* correctement configuré. Pour info, [Rollup](https://rollupjs.org/guide/en/) est un bundler Javascript simple et léger. Si vous souhaitez en savoir plus sur cet outil, vous pouvez lire [cet article](https://buzut.net/configurer-rollup-bundles-esm-cjs/) simple et concis (mention spéciale au premier commentaire).
 
 ### Router
 
@@ -98,12 +98,22 @@ user.update(user => ({
 }));
 ```
 
-Et pour écouter une valeur : 
+Pour écouter une valeur : 
 
 ```js
 const unsubscribe = user.subscribe(value => {
   user_value = value;
 }); 
+```
+
+Ou, tout simplement afficher la valeur :
+
+```js
+<script>
+import { user } from "../stores.js";
+</script>
+
+<h1>Hello {$user}</h1>
 ```
 
 Nous avons ici un store qui contiendra à l'initialisation un user avec des informations par défaut.
@@ -128,7 +138,7 @@ Dans un premier temps, il faut créer le formulaire de login.
 <button on:click={go} class="btn size-full">Go !</button>
 ```
 
-Ce formulaire a deux actions. Dans un premier temps il met à jour le nom de l'utilisateur dans le store à chaque fois que l'utilisateur tape dans le champ. Pour ce faire, il suffit de suivre ce qu'on s'est dit précédemment pour la mise à jour d'une valeur du store, ici on cherche à mettre à jour l'attribut name de la clé user.
+Ce formulaire a deux actions. Dans un premier temps, il met à jour le nom de l'utilisateur dans le store à chaque fois que l'utilisateur tape dans le champ. Pour ce faire, il suffit de suivre ce qu'on s'est dit précédemment pour la mise à jour d'une valeur du store, ici on cherche à mettre à jour l'attribut name de la clé user.
 
 Lorsque l'utilisateur valide le formulaire de connexion, plusieurs choses sont à faire, notamment mettre à jour le pseudo et la couleur du pilote dans le store et rediriger vers le poste de pilotage.
 

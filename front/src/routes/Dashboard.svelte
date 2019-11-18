@@ -5,12 +5,8 @@
 
   import Drone from "../components/Drone.svelte";
   import PiloteInfo from "../components/PiloteInfo.svelte";
-  
-  let user_value, droneState, socket;
 
-  const unsubscribe = user.subscribe(value => {
-    user_value = value;
-  });
+  let droneState, socket;
 
   const turnRight = () => {
     droneState.direction += droneState.direction < 90 ? 10 : 0;
@@ -21,39 +17,38 @@
   };
 
   onMount(() => {
-    if (user_value.name === "") {
+    if ($user.name === "") {
       navigate("/login", { replace: true });
     } else {
       socket = io("http://localhost:3000");
       socket.on("welcome", initDroneState => {
-        socket.emit("newUser", user_value);
+        socket.emit("newUser", $user);
         droneState = initDroneState;
       });
       socket.on("newState", newDroneState => {
         droneState = newDroneState;
-      })
+      });
     }
   });
 
-  $: if(socket != undefined) {
-    socket.emit("action", user_value, droneState);
+  $: if (socket != undefined) {
+    socket.emit("action", $user, droneState);
   }
 
-  $:droid.update(() => ({
+  $: droid.update(() => ({
     isHyperspace: droneState && droneState.power === 100
   }));
-
 </script>
 
-<div class="dashboard">
-  <PiloteInfo surname={user_value.surname} color={user_value.color}/>
-  {#if droneState}
+<div class="dashboard"></div>
+<PiloteInfo surname={$user.surname} color={$user.color} />
+{#if droneState}
   <div class="cockpit">
     <ul class="infos">
       <li>Power: {droneState.power}%</li>
       <li>Direction: {droneState.direction}°</li>
     </ul>
-    <Drone power={droneState.power} direction={droneState.direction}/>
+    <Drone power={droneState.power} direction={droneState.direction} />
     <div class="cockpit__control">
       <button class="cockpit__left btn" on:click={turnLeft}>Left</button>
       <div class="cockpit__speed">
