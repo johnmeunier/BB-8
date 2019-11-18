@@ -45,27 +45,29 @@
 
 </script>
 
-<PiloteInfo surname={user_value.surname} color={user_value.color}/>
-{#if droneState}
-<div class="cockpit">
-  <ul class="infos">
-    <li>Power: {droneState.power}%</li>
-    <li>Direction: {droneState.direction}°</li>
-  </ul>
-  <Drone power={droneState.power} direction={droneState.direction}/>
-  <div class="cockpit__control">
-    <button class="cockpit__left btn" on:click={turnLeft}>Left</button>
-    <div class="cockpit__speed">
-      <input
-        value="0"
-        class="cockpit__speed-input"
-        type="range"
-        orient="vertical"
-        min="0"
-        max="100"
-        bind:value={droneState.power} />
+<div class="dashboard">
+  <PiloteInfo surname={user_value.surname} color={user_value.color}/>
+  {#if droneState}
+  <div class="cockpit">
+    <ul class="infos">
+      <li>Power: {droneState.power}%</li>
+      <li>Direction: {droneState.direction}°</li>
+    </ul>
+    <Drone power={droneState.power} direction={droneState.direction}/>
+    <div class="cockpit__control">
+      <button class="cockpit__left btn" on:click={turnLeft}>Left</button>
+      <div class="cockpit__speed">
+        <input
+          value="0"
+          class="cockpit__speed-input"
+          type="range"
+          orient="vertical"
+          min="0"
+          max="100"
+          bind:value={droneState.power} />
+      </div>
+      <button class="cockpit__right btn" on:click={turnRight}>Right</button>
     </div>
-    <button class="cockpit__right btn" on:click={turnRight}>Right</button>
   </div>
+  {/if}
 </div>
-{/if}

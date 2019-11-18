@@ -22,6 +22,8 @@
   };
 </script>
 
-<h2>Who are you ?</h2>
-<input on:input={nameHandler} placeholder="Your name" class="btn size-full" />
-<button on:click={go} class="btn size-full">Go !</button>
+<form on:submit={go} class="login">
+  <h2>Who are you ?</h2>
+  <input on:input={nameHandler} placeholder="Your name" class="btn size-full" />
+  <input type="submit" class="btn size-full" value="Go !" />
+</form>
