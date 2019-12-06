@@ -23,13 +23,23 @@ body {
   text-shadow: outset 0px 0px 80px 2px rgba(9, 9, 168, 1);
 }
 
-.container {
+.dashboard,
+.login {
+  animation: appears 0.7s ease-in-out;
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
   padding: 1rem;
   overflow: hidden;
+}
+
+.login {
+  height: auto;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
 }
 
 a {
@@ -162,6 +172,7 @@ a {
     display: block;
     height: 80%;
     margin: 0 auto;
+    transition: transform linear 0.2s;
   }
 }
 
@@ -170,6 +181,10 @@ a {
   font-size: 0.8rem;
 }
 
+@keyframes appears {
+  0% { opacity: 0; transform: rotateY(180deg); }
+  100% { opacity: 1; transform: rotateY(0); }
+}
 
 
 

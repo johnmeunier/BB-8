@@ -42,6 +42,7 @@
   }));
 </script>
 
+<div class="dashboard"></div>
 <PiloteInfo surname={$user.surname} color={$user.color} />
 {#if droneState}
   <div class="cockpit">
@@ -66,4 +67,5 @@
       <button class="cockpit__right btn" on:click={turnRight}>Right</button>
     </div>
   </div>
-{/if}
+  {/if}
+</div>
