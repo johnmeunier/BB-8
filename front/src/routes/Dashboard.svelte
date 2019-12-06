@@ -10,10 +10,16 @@
 
   const turnRight = () => {
     droneState.direction += droneState.direction < 90 ? 10 : 0;
+    socket.emit("action", $user, droneState);
   };
 
   const turnLeft = () => {
     droneState.direction -= droneState.direction > -90 ? 10 : 0;
+    socket.emit("action", $user, droneState);
+  };
+
+  const powerChange = () => {
+    socket.emit("action", $user, droneState);
   };
 
   onMount(() => {
@@ -30,10 +36,6 @@
       });
     }
   });
-
-  $: if (socket != undefined) {
-    socket.emit("action", $user, droneState);
-  }
 
   $: droid.update(() => ({
     isHyperspace: droneState && droneState.power === 100
@@ -58,6 +60,7 @@
           orient="vertical"
           min="0"
           max="100"
+          on:change={powerChange}
           bind:value={droneState.power} />
       </div>
       <button class="cockpit__right btn" on:click={turnRight}>Right</button>

@@ -11,6 +11,8 @@
   "author": "jmeunier",
   "license": "ISC",
   "dependencies": {
-    "socket.io": "2.2.0"
+    "noble": "^1.9.1",
+    "socket.io": "2.2.0",
+    "sphero": "^0.9.2"
   }
 }

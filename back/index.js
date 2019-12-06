@@ -13,16 +13,16 @@ server.on("connection", socket => {
   socket.emit("welcome", droneState);
 
   socket.on("newUser", user => {
-    console.log(`# ${user.name} from team ${user.color} is now connected #`);
-    socket.emit("initCockpit", droneState);
+    console.log(`# NEWUSER : ${user.name} from team ${user.color} is now connected #`);
   });
 
   socket.on("action", (user, newDroneState) => {
+    console.log(`# ACTION`);
     droneState = { ...newDroneState, color: user.color };
     socket.broadcast.emit("newState", droneState);
   });
-
-  setInterval(() => {
-    console.dir(droneState);
-  }, 1000);
 });
+
+setInterval(() => {
+  //console.dir(droneState);
+}, 1000);
