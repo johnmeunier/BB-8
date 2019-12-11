@@ -42,9 +42,9 @@
   }));
 </script>
 
-<div class="dashboard"></div>
-<PiloteInfo surname={$user.surname} color={$user.color} />
-{#if droneState}
+<div class="dashboard">
+  <PiloteInfo surname={$user.surname} color={$user.color} />
+  {#if droneState}
   <div class="cockpit">
     <ul class="infos">
       <li>Power: {droneState.power}%</li>
@@ -61,7 +61,7 @@
           orient="vertical"
           min="0"
           max="100"
-          on:change={powerChange}
+          on:input={powerChange}
           bind:value={droneState.power} />
       </div>
       <button class="cockpit__right btn" on:click={turnRight}>Right</button>
